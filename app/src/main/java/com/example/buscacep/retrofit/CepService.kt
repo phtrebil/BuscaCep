@@ -8,5 +8,5 @@ import retrofit2.http.Path
 interface CepService {
 
     @GET("{cep}/json")
-    fun buscaEndereco(@Path("cep") cep: String): Call<Endereco>
+    suspend fun buscaEndereco(@Path("cep") cep: String): Endereco
 }

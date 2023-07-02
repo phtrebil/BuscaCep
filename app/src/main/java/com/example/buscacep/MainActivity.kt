@@ -9,6 +9,9 @@ import android.widget.Toast
 import com.example.buscacep.databinding.ActivityMainBinding
 import com.example.buscacep.model.Endereco
 import com.example.buscacep.retrofit.EnderecoRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,33 +32,28 @@ class MainActivity : AppCompatActivity() {
         binding.constraintLayoutInfoEndereco.visibility = GONE
 
         binding.botaoBuscar.setOnClickListener {
-            val call = EnderecoRepository().cepService.buscaEndereco(binding.cep.text.toString())
+            val cep = binding.cep.text.toString()
 
-            // Faz uma chamada assíncrona à API para buscar o endereço com base no CEP fornecido
-            call.enqueue(object : Callback<Endereco> {
-                override fun onResponse(call: Call<Endereco>, response: Response<Endereco>) {
-                    if (response.isSuccessful) {
-                        // Exibe o layout de informações de endereço quando a resposta é bem-sucedida
-                        binding.constraintLayoutInfoEndereco.visibility = VISIBLE
-                        endereco = response.body()
-                        binding.rua.text = endereco?.rua
-                        binding.bairro.text = endereco?.bairro
-                        binding.cidade.text = endereco?.cidade
-                        binding.estado.text = endereco?.estado
-                    } else {
-                        // Oculta o layout de informações de endereço se a resposta não for bem-sucedida
-                        binding.constraintLayoutInfoEndereco.visibility = GONE
-                        Toast.makeText(this@MainActivity, "Endereço não encontrado", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            // Inicia uma coroutine para executar a busca de endereço de forma assíncrona
+            CoroutineScope(Dispatchers.Main).launch {
+                try {
+                    // Chama a função suspensa para buscar o endereço
+                    val endereco = EnderecoRepository().cepService.buscaEndereco(cep)
 
-                override fun onFailure(call: Call<Endereco>, t: Throwable) {
-                    // Oculta o layout de informações de endereço em caso de falha na chamada
+                    // Exibe o layout de informações de endereço quando a resposta é bem-sucedida
+                    binding.constraintLayoutInfoEndereco.visibility = VISIBLE
+                    binding.rua.text = endereco.rua
+                    binding.bairro.text = endereco.bairro
+                    binding.cidade.text = endereco.cidade
+                    binding.estado.text = endereco.estado
+                } catch (e: Exception) {
+                    // Oculta o layout de informações de endereço se a resposta não for bem-sucedida
                     binding.constraintLayoutInfoEndereco.visibility = GONE
-                    Toast.makeText(this@MainActivity, "Endereço não encontrado", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Endereço não encontrado", Toast.LENGTH_SHORT)
+                        .show()
                 }
-
-            })
+            }
         }
     }
 }
+
