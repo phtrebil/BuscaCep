@@ -28,3 +28,10 @@ Este projeto é apenas um exemplo básico de como utilizar o Retrofit para fazer
 Espero que este repositório seja útil para você entender e experimentar as diferenças entre Callbacks e Coroutines no contexto de requisições assíncronas com Retrofit.
 
 Se tiver alguma dúvida ou sugestão, fique à vontade para entrar em contato.
+
+| :placard: Vitrine.Dev |     |
+| -------------  | --- |
+| :sparkles: Nome        | **BuscaCep**
+| :label: Tecnologias | Kotlin, Android, Retrofit, Callback, Coroutine
+| :rocket: URL         | https://github.com/phtrebil/BuscaCep
+| :fire: Desafio     | https://github.com/phtrebil/BuscaCep
